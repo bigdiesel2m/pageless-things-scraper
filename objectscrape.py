@@ -1,12 +1,11 @@
-import json
 import requests
 
 API_URL = "https://oldschool.runescape.wiki/api.php" #we don't need this to change, so might as well set it here
 session = requests.Session()
-
+headers = {'User-Agent': 'Automated scraping script to generate list of page object IDs on the wiki. See https://github.com/bigdiesel2m/pageless-things-scraper'}
 idlist = []
-outlist = []
-for i in range(12): #up to 
+
+for i in range(13): #up to 65000 objects
 	offset = 0
 	while True:
 		print(str(i) + " - " + str(offset))
@@ -16,17 +15,17 @@ for i in range(12): #up to
 			"format": "json",
 			"query": '[[Object ID::>' + str(bound) +']][[Object ID::<<' + str(bound+5000) +']]'+ '|?Object ID' + '|limit=500' + '|offset=' + str(offset)
 		}
-		response = session.get(API_URL, params=params)
+		response = session.get(API_URL, params=params, headers=headers)
 		responsejson = response.json()
 		for result in responsejson['query']['results']:
 			name = result
-			id = responsejson['query']['results'][result]['printouts']['Object ID'][0]
-			idlist.append(id)
+			for id in responsejson['query']['results'][result]['printouts']['Object ID']:
+				idlist.append(str(id))
 		
 		if 'query-continue-offset' in responsejson:
 			offset = responsejson['query-continue-offset']
 		else:
 			break
 
-with open('idlist.json', 'w') as outfile:
-	json.dump(idlist, outfile)
+with open('objidlist.txt', "w", encoding="utf-8") as outfile:
+	outfile.write('\n'.join(idlist))
