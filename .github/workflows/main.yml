@@ -22,7 +22,7 @@ jobs:
           java-version: '11'
       - run: javac -cp h2.jar ConvertToH2.java
       - run: pwd;ls
-      - run: java -cp "h2.jar;." ConvertToH2
+      - run: java -cp "h2.jar:." ConvertToH2
       - uses: actions/upload-artifact@v4
         with:
           path: |
