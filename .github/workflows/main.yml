@@ -1,0 +1,45 @@
+name: Generate ID list
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+jobs:
+  generate-object-ids:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5 
+        with:
+          python-version: '3.12.1'
+      - run: py objectscrape.py
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - run: javac -cp h2.jar ConvertToH2.java
+      - run: java -cp "h2.jar;." ConvertToH2
+      - uses: actions/upload-artifact@v4
+        with:
+          path: |
+            object_ids.h2.mv.db
+            objidlist.txt
+          name: scraper-outputs
+  commit-files-to-rep:
+    runs-on: ubuntu-latest
+    needs: generate-object-ids
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: db
+      - uses: actions/download-artifact@v4
+        with:
+          name: scraper-outputs
+      - run: |
+          git config --global user.name 'bigdiesel2m'
+          git config --global user.email 'bigdiesel2m@users.noreply.github.com'
+          git add .
+          git commit -m 'Database update: $(date +'%Y-%m-%d %H:%M:%S')'
+          git push
