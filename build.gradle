@@ -8,7 +8,7 @@ repositories {
 }
 
 application {
-    mainClass = "ConvertToH2"
+    mainClass = "me.github.bigdiesel2m.ConvertToH2"
 }
 
 dependencies {

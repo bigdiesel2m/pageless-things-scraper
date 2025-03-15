@@ -1,4 +1,4 @@
-package src.main.java;
+package me.github.bigdiesel2m;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
