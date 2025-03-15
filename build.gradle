@@ -7,6 +7,10 @@ repositories {
 	mavenCentral()
 }
 
+application {
+    mainClass = "ConvertToH2"
+}
+
 dependencies {
 	implementation "com.h2database:h2:2.1.212"
 }
