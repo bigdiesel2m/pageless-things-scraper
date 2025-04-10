@@ -7,7 +7,7 @@ on:
     branches:
       - main
 jobs:
-  generate-object-ids:
+  generate-page-ids:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,7 +15,7 @@ jobs:
         with:
           python-version: '3.12.1'
       - run: pip install requests
-      - run: python objectscrape.py
+      - run: python idscrape.py
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -25,12 +25,13 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           path: |
-            object_ids.h2.mv.db
-            objidlist.txt
+            page_ids.h2.mv.db
+            obj_ids.txt
+            npc_ids.txt
           name: scraper-outputs
-  commit-files-to-rep:
+  commit-files-to-repo:
     runs-on: ubuntu-latest
-    needs: generate-object-ids
+    needs: generate-page-ids
     steps:
       - uses: actions/checkout@v4
         with:
