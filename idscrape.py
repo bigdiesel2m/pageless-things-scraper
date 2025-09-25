@@ -16,7 +16,8 @@ while True:
 	response_json = session.get(API_URL, params=params, headers=headers).json()
 	for result in response_json['bucket']:
 		for obj_id in result['id']:
-			obj_ids.append(str(obj_id))
+			if obj_id.isnumeric():
+				obj_ids.append(str(obj_id))
 	if len(response_json['bucket']) == 5000:
 		offset = offset + 5000
 	else:
@@ -37,7 +38,8 @@ while True:
 	response_json = session.get(API_URL, params=params, headers=headers).json()
 	for result in response_json['bucket']:
 		for npc_id in result['id']:
-			npc_ids.append(str(npc_id))
+			if npc_id.isnumeric():
+				npc_ids.append(str(npc_id))
 	if len(response_json['bucket']) == 5000:
 		offset = offset + 5000
 	else:
